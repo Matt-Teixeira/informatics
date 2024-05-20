@@ -1,0 +1,20 @@
+{
+  "name": "infomatics",
+  "version": "1.0.0",
+  "description": "Log data infomatics",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "ge_ct_log": "node index.js log GE CT",
+    "ge_cv_log": "node index.js log GE CV",
+    "ge_mri_log": "node index.js log GE MRI"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "luxon": "^3.4.4",
+    "pg-promise": "^11.6.0",
+    "short-uuid": "^5.2.0"
+  }
+}
