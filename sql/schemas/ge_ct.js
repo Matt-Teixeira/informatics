@@ -6,7 +6,9 @@ const ge_ct_schema = {
   host_state: null,
   prospective_exam: null,
   protocol: null,
-  seven_up: null
+  serise: null,
+  scans: null,
+  images: null
 };
 
 module.exports = { ge_ct_schema };
