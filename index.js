@@ -32,10 +32,15 @@ async function runJob(run_log, process_group, manufacturer, modality) {
 
   switch (process_group) {
     case "mag":
-      console.log("Running mag processing")
+      console.log("Running mag processing");
       break;
     case "log":
-        await determineManufacturer(run_log, manufacturer, modality, process_datetime);
+      await determineManufacturer(
+        run_log,
+        manufacturer,
+        modality,
+        process_datetime
+      );
       break;
     default:
       break;
@@ -56,7 +61,9 @@ const onBoot = async () => {
 
   await addLogEvent(I, run_log, "onBoot", cal, note, null);
 
+  console.time();
   await runJob(run_log, process_group, manufacturer, modality);
+  console.timeEnd();
 
   await writeLogEvents(run_log);
 };

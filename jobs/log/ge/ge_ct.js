@@ -2,7 +2,12 @@ const pgp = require("pg-promise")();
 const { get_ge_ct_data } = require("../../../sql/qf-provider");
 const map_to_schema = require("../../../tools/mapToSchema");
 
-const { parse_1, parse_2, parse_3 } = require("../../../processing/ge/ge_ct");
+const {
+  parse_1,
+  parse_2,
+  parse_3,
+  parse_tube
+} = require("../../../processing/ge/ge_ct");
 const { ge_ct_schema } = require("../../../sql/schemas/ge_ct");
 const { pg_column_sets: pg_cs } = require("../../../sql/pg-helpers");
 
@@ -31,14 +36,14 @@ const process_ge_ct = async (run_log, process_datetime) => {
   const parsed_data = [];
 
   for (let row of rows_to_process) {
-    // parse_1(process_datetime, row, parsed_data);
-    // parse_2(process_datetime, row, parsed_data);
+    parse_1(process_datetime, row, parsed_data);
+    parse_2(process_datetime, row, parsed_data);
     parse_3(process_datetime, row, parsed_data);
+    parse_tube(process_datetime, row, parsed_data);
   }
-  return;
 
   const mapped_data = map_to_schema(parsed_data, ge_ct_schema);
-  c; // onsole.log(mapped_data);
+  console.log(mapped_data);
 
   const query = pgp.helpers.insert(mapped_data, pg_cs.info.ge.ge_ct);
   try {

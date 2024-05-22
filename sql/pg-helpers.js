@@ -23,7 +23,15 @@ const pg_column_sets = {
           "protocol",
           "serise",
           "scans",
-          "images"
+          "images",
+          "scan_group",
+          "group_type",
+          "start_loc",
+          "end_loc",
+          "orientation",
+          "position",
+          "tube_temp",
+          "unit"
         ],
         { table: pg_tables.ge.info_ge_ct }
       )

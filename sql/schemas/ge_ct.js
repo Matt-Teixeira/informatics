@@ -8,7 +8,15 @@ const ge_ct_schema = {
   protocol: null,
   serise: null,
   scans: null,
-  images: null
+  images: null,
+  scan_group: null,
+  group_type: null,
+  start_loc: null,
+  end_loc: null,
+  orientation: null,
+  position: null,
+  tube_temp: null,
+  unit: null
 };
 
 module.exports = { ge_ct_schema };
