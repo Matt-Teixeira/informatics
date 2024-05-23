@@ -6,7 +6,8 @@ const {
   parse_1,
   parse_2,
   parse_3,
-  parse_tube
+  parse_tube,
+  parse_tube_alt
 } = require("../../../processing/ge/ge_ct");
 const { ge_ct_schema } = require("../../../sql/schemas/ge_ct");
 const { pg_column_sets: pg_cs } = require("../../../sql/pg-helpers");
@@ -40,6 +41,7 @@ const process_ge_ct = async (run_log, process_datetime) => {
     parse_2(process_datetime, row, parsed_data);
     parse_3(process_datetime, row, parsed_data);
     parse_tube(process_datetime, row, parsed_data);
+    parse_tube_alt(process_datetime, row, parsed_data);
   }
 
   const mapped_data = map_to_schema(parsed_data, ge_ct_schema);

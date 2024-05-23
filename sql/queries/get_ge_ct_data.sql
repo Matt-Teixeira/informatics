@@ -25,6 +25,6 @@ WHERE
     manufacturer = 'GE'
     AND sys.modality = 'CT'
     AND sys.process_log = TRUE
-    AND ge.capture_datetime >= NOW() - INTERVAL '30 minutes'
+    AND ge.capture_datetime >= NOW() - INTERVAL '1440 minutes'
 ORDER BY
     sys.id;

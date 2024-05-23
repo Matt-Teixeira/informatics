@@ -1,3 +1,10 @@
+const unit_map = {
+  celsius: "C",
+  Celsius: "C",
+  fahrenheit: "F",
+  Fahrenheit: "F"
+};
+
 // Pulls prospective_exam and protocol data at start sequence
 const parse_1 = (process_datetime, row, parsed_data) => {
   let exam_start =
@@ -97,10 +104,6 @@ const parse_3 = (process_datetime, row, parsed_data) => {
 };
 
 const parse_tube = (process_datetime, row, parsed_data) => {
-  const unit_map = {
-    celsius: "C",
-    fahrenheit: "F"
-  };
   let db_obj = {};
   // before/after cold warmup
   const before_cold_warmup_re =
@@ -135,4 +138,61 @@ const parse_tube = (process_datetime, row, parsed_data) => {
   }
 };
 
-module.exports = { parse_1, parse_2, parse_3, parse_tube };
+const parse_tube_alt = (process_datetime, row, parsed_data) => {
+  let db_obj = {};
+
+  const mylar_window_re =
+    /Tube temperature before Mylar Window Check is (?<tube_temp>\d+\.?\d+)\sdegrees\s(?<unit>\w+)/;
+  const warmup_ii_re =
+    /Tube temperature before WarmupII is (?<tube_temp>\d+\.?\d+)\sdegrees\s(?<unit>\w+)/;
+  const bad_channel_map_re =
+    /Tube temperature before Bad Channel Map Update is (?<tube_temp>\d+\.?\d+)\sdegrees\s(?<unit>\w+)/;
+  const before_fast_cal_re =
+    /Tube temperature before Fast Calibration is (?<tube_temp>\d+\.?\d+)\sdegrees\s(?<unit>\w+)/;
+  const after_fast_cal_re =
+    /Tube temperature after Fast Calibration is (?<tube_temp>\d+\.?\d+)\sdegrees\s(?<unit>\w+)/;
+
+  const mylar_window_data = row.message.match(mylar_window_re);
+  const warmup_ii_data = row.message.match(warmup_ii_re);
+  const bad_channel_map_data = row.message.match(bad_channel_map_re);
+  const before_fast_cal_data = row.message.match(before_fast_cal_re);
+  const after_fast_cal_data = row.message.match(after_fast_cal_re);
+
+  db_obj.system_id = row.system_id;
+  db_obj.process_datetime = process_datetime;
+  db_obj.capture_datetime = row.capture_datetime;
+  db_obj.host_datetime = row.host_datetime;
+
+  if (mylar_window_data) {
+    db_obj.host_state = "mylar_window";
+    db_obj.tube_temp = mylar_window_data.groups.tube_temp;
+    db_obj.unit = unit_map[mylar_window_data.groups.unit];
+    parsed_data.push(db_obj);
+  }
+  if (warmup_ii_data) {
+    db_obj.host_state = "warmup_two";
+    db_obj.tube_temp = warmup_ii_data.groups.tube_temp;
+    db_obj.unit = unit_map[warmup_ii_data.groups.unit];
+    parsed_data.push(db_obj);
+  }
+  if (bad_channel_map_data) {
+    db_obj.host_state = "bad_channel_map";
+    db_obj.tube_temp = bad_channel_map_data.groups.tube_temp;
+    db_obj.unit = unit_map[bad_channel_map_data.groups.unit];
+    parsed_data.push(db_obj);
+  }
+  if (before_fast_cal_data) {
+    db_obj.host_state = "before_fast_cal";
+    db_obj.tube_temp = before_fast_cal_data.groups.tube_temp;
+    db_obj.unit = unit_map[before_fast_cal_data.groups.unit];
+    parsed_data.push(db_obj);
+  }
+  if (after_fast_cal_data) {
+    db_obj.host_state = "after_fast_cal";
+    db_obj.tube_temp = after_fast_cal_data.groups.tube_temp;
+    db_obj.unit = unit_map[after_fast_cal_data.groups.unit];
+    parsed_data.push(db_obj);
+  }
+};
+
+module.exports = { parse_1, parse_2, parse_3, parse_tube, parse_tube_alt };
